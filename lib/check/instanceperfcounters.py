@@ -17,7 +17,8 @@ async def check_instanceperfcounters(
             .lower() \
             .replace(' ', '_') \
             .replace('-', '_') \
-            .replace('/sec', '')
+            .replace('/sec', '') \
+            .replace('(timeout > 0)', 'timeout_gt_0')
         if metric_name.endswith('_ratio'):
             metric_name = metric_name[:-6]
 
