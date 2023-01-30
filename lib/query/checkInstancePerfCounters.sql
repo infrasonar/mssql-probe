@@ -13,10 +13,10 @@ WHERE
         LIKE '%Access Methods%') OR
     (counter_name = 'Processes blocked' AND object_name
         LIKE '%General Statistics%') OR
-    (counter_name = 'Query optimizations/sec' AND instance_name = '_Total'
+    (counter_name = 'Query optimizations/sec' AND instance_name = 'default'
         AND object_name LIKE '%SQLServer:Workload Group Stats%') OR
-    (counter_name = 'Suboptimal plans/sec' AND object_name
-        LIKE '%SQLServer:Workload Group Stats%') OR
+    (counter_name = 'Suboptimal plans/sec' AND instance_name = 'default'
+        AND object_name LIKE '%SQLServer:Workload Group Stats%') OR
     (counter_name = 'Stored Procedures Invoked/sec'
         AND instance_name = '_Total' AND object_name
         LIKE '%SQLServer:Broker Activation%') OR

@@ -2,9 +2,10 @@ import asyncio
 import datetime
 import decimal
 import pytds
+import logging
 import uuid
 from libprobe.asset import Asset
-from libprobe.exceptions import CheckException
+from libprobe.exceptions import CheckException, IgnoreResultException
 from pytds.login import NtlmAuth
 from typing import List, Optional
 from .asset_cache import AssetCache
@@ -108,6 +109,10 @@ async def get_data(
         error_msg = str(e)
         if error_msg.startswith('SQL Server message'):
             error_msg = error_msg.split('\n', 1)[-1]
+        if error_msg.startswith('Login failed'):
+            logging.warning(error_msg)
+            raise IgnoreResultException
+
         if 'Previous statement didn\'t produce any results' in error_msg:
             return []
         else:
