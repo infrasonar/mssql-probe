@@ -1,13 +1,13 @@
 SELECT TOP(25)
     CONVERT(decimal(18,2), user_seeks * avg_total_user_cost * (avg_user_impact * 0.01)) AS [index_advantage],
-    migs.last_user_seek, 
-    mid.[statement] AS [Database.Schema.Table],
-    mid.equality_columns, 
-    mid.inequality_columns, 
+    migs.last_user_seek,
+    mid.[statement] AS [database_schema_table],
+    mid.equality_columns,
+    mid.inequality_columns,
     mid.included_columns,
-    migs.unique_compiles, 
-    migs.user_seeks, 
-    migs.avg_total_user_cost, 
+    migs.unique_compiles,
+    migs.user_seeks,
+    migs.avg_total_user_cost,
     migs.avg_user_impact,
     LOG10(user_seeks * avg_total_user_cost * avg_user_impact) as index_usefulness
 FROM

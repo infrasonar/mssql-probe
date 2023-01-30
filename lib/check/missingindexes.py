@@ -2,7 +2,7 @@ from libprobe.asset import Asset
 from ..mssql_query import get_data
 
 QUERY = open('lib/query/checkMissingIndexes.sql').read()
-IDX = ['Database.Schema.Table', 'equality_columns', 'inequality_columns',
+IDX = ['database_schema_table', 'equality_columns', 'inequality_columns',
        'included_columns']
 
 

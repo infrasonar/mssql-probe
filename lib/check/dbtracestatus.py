@@ -2,7 +2,6 @@ from libprobe.asset import Asset
 from ..mssql_query import get_data
 
 QUERY = open('lib/query/checkDbTraceStatus.sql').read()
-IDX = ['TraceFlag']
 BOOL_LK = {
     0: False,
     1: True,
@@ -18,11 +17,12 @@ async def check_dbtracestatus(
         asset_config: dict,
         config: dict) -> dict:
 
-    res = await get_data(asset, asset_config, config, QUERY, IDX)
+    res = await get_data(asset, asset_config, config, QUERY, [])
     for item in res:
-        item['Global'] = BOOL_LK.get(item['Global'])
-        item['Session'] = BOOL_LK.get(item['Session'])
-        item['Status'] = STATUS_LK.get(item.get('Status'))
+        item['name'] = str(item.pop('TraceFlag'))
+        item['global'] = BOOL_LK.get(item.pop('Global', None))
+        item['session'] = BOOL_LK.get(item.pop('Session', None))
+        item['status'] = STATUS_LK.get(item.pop('Status', None))
 
     return {
         'dbtracestatus': res,

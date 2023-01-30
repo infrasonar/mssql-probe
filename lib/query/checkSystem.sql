@@ -1,29 +1,29 @@
 SELECT
-    SERVERPROPERTY('MachineName') AS [MachineName],
-    SERVERPROPERTY('ServerName') AS [ServerName],
+    SERVERPROPERTY('MachineName') AS [machine_name],
+    SERVERPROPERTY('ServerName') AS [server_name],
     SERVERPROPERTY('ServerName') AS [name],
-    SERVERPROPERTY('InstanceName') AS [Instance],
-    SERVERPROPERTY('IsClustered') AS [IsClustered],
-    SERVERPROPERTY('ComputerNamePhysicalNetBIOS') AS [ComputerNamePhysicalNetBIOS],
-    SERVERPROPERTY('Edition') AS [Edition],
-    SERVERPROPERTY('ProductLevel') AS [ProductLevel],				-- What servicing branch (RTM/SP/CU)
-    SERVERPROPERTY('ProductUpdateLevel') AS [ProductUpdateLevel],	-- Within a servicing branch, what CU# is applied
-    SERVERPROPERTY('ProductVersion') AS [ProductVersion],
-    SERVERPROPERTY('ProductMajorVersion') AS [ProductMajorVersion],
-    SERVERPROPERTY('ProductMinorVersion') AS [ProductMinorVersion],
-    SERVERPROPERTY('ProductBuild') AS [ProductBuild],
-    SERVERPROPERTY('ProductBuildType') AS [ProductBuildType],		      -- Is this a GDR or OD hotfix (NULL if on a CU build)
-    SERVERPROPERTY('ProductUpdateReference') AS [ProductUpdateReference], -- KB article number that is applicable for this build
-    SERVERPROPERTY('ProcessID') AS [ProcessID],
-    SERVERPROPERTY('Collation') AS [Collation],
-    SERVERPROPERTY('IsFullTextInstalled') AS [IsFullTextInstalled],
-    SERVERPROPERTY('IsIntegratedSecurityOnly') AS [IsIntegratedSecurityOnly],
-    SERVERPROPERTY('FilestreamConfiguredLevel') AS [FilestreamConfiguredLevel],
-    SERVERPROPERTY('IsHadrEnabled') AS [IsHadrEnabled],
-    SERVERPROPERTY('HadrManagerStatus') AS [HadrManagerStatus],
-    SERVERPROPERTY('InstanceDefaultDataPath') AS [InstanceDefaultDataPath],
-    SERVERPROPERTY('InstanceDefaultLogPath') AS [InstanceDefaultLogPath],
-    SERVERPROPERTY('BuildClrVersion') AS [BuildClrVersion],
+    SERVERPROPERTY('InstanceName') AS [instance_name],
+    SERVERPROPERTY('IsClustered') AS [is_clustered],
+    SERVERPROPERTY('ComputerNamePhysicalNetBIOS') AS [computer_name_physical_netbios],
+    SERVERPROPERTY('Edition') AS [edition],
+    SERVERPROPERTY('ProductLevel') AS [product_level],				-- What servicing branch (RTM/SP/CU)
+    SERVERPROPERTY('ProductUpdateLevel') AS [product_update_level],	-- Within a servicing branch, what CU# is applied
+    SERVERPROPERTY('ProductVersion') AS [product_version],
+    SERVERPROPERTY('ProductMajorVersion') AS [product_major_version],
+    SERVERPROPERTY('ProductMinorVersion') AS [product_minor_version],
+    SERVERPROPERTY('ProductBuild') AS [product_build],
+    SERVERPROPERTY('ProductBuildType') AS [product_build_type],		      -- Is this a GDR or OD hotfix (NULL if on a CU build)
+    SERVERPROPERTY('ProductUpdateReference') AS [product_update_reference], -- KB article number that is applicable for this build
+    SERVERPROPERTY('ProcessID') AS [process_id],
+    SERVERPROPERTY('Collation') AS [collation],
+    SERVERPROPERTY('IsFullTextInstalled') AS [is_full_text_installed],
+    SERVERPROPERTY('IsIntegratedSecurityOnly') AS [is_integrated_security_only],
+    SERVERPROPERTY('FilestreamConfiguredLevel') AS [filestream_configured_level],
+    SERVERPROPERTY('IsHadrEnabled') AS [is_hadr_enabled],
+    SERVERPROPERTY('HadrManagerStatus') AS [hadr_manager_status],
+    SERVERPROPERTY('InstanceDefaultDataPath') AS [instance_default_data_path],
+    SERVERPROPERTY('InstanceDefaultLogPath') AS [instance_default_log_path],
+    SERVERPROPERTY('BuildClrVersion') AS [build_clr_version],
     windows_release,
     windows_service_pack_level,
     windows_sku,
