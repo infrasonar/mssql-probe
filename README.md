@@ -22,4 +22,3 @@ Variable            | Default                        | Description
 ```
 docker build -t mssql-probe . --no-cache
 ```
-# mssql-probe
