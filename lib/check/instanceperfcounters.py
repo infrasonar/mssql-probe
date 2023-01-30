@@ -35,7 +35,6 @@ async def check_instanceperfcounters(
                 f'{val} vs {item[metric_name]}')
         item[metric_name] = val
 
-    print(item)
     return {
         'instanceperf': [item],
     }
