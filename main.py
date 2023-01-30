@@ -1,7 +1,6 @@
 from libprobe.probe import Probe
 from lib.check.agentalerts import check_agentalerts
 from lib.check.agentjobs import check_agentjobs
-from lib.check.applicationsessions import check_applicationsessions
 from lib.check.avgtaskcount import check_avgtaskcount
 from lib.check.bestpractices import check_bestpractices
 from lib.check.bufferpoolusage import check_bufferpoolusage
@@ -18,7 +17,6 @@ from lib.check.indexfragmentation import check_indexfragmentation
 from lib.check.indexusage import check_indexusage
 from lib.check.instanceconfig import check_instanceconfig
 from lib.check.instanceperfcounters import check_instanceperfcounters
-from lib.check.iowarningresults import check_iowarningresults
 from lib.check.lastbackups import check_lastbackups
 from lib.check.logicalqueryreads import check_logicalqueryreads
 from lib.check.logshipping import check_logshipping
@@ -53,7 +51,6 @@ if __name__ == '__main__':
     checks = {
         'agentalerts': check_agentalerts,
         'agentjobs': check_agentjobs,
-        'applicationsessions': check_applicationsessions,
         'avgtaskcount': check_avgtaskcount,
         'bestpractices': check_bestpractices,
         'bufferpoolusage': check_bufferpoolusage,
@@ -70,7 +67,6 @@ if __name__ == '__main__':
         'indexusage': check_indexusage,
         'instanceconfig': check_instanceconfig,
         'instanceperfcounters': check_instanceperfcounters,
-        'iowarningresults': check_iowarningresults,
         'lastbackups': check_lastbackups,
         'logicalqueryreads': check_logicalqueryreads,
         'logshipping': check_logshipping,
