@@ -13,7 +13,7 @@ async def check_oldstatistics(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True)
-    top = sorted(res, key=lambda a: a.get('age'), reverse=True)[:N]
+    top = sorted(res, key=lambda a: a.get('age'), reverse=True)
     return {
-        'oldstatistics': dedup_ignore(top),
+        'oldstatistics': dedup_ignore(top, N),
     }

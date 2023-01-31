@@ -13,7 +13,7 @@ async def check_tablesizes(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True)
-    top = sorted(res, key=lambda a: a.get('row_count'), reverse=True)[:N]
+    top = sorted(res, key=lambda a: a.get('row_count'), reverse=True)
     return {
-        'tablesizes': dedup_ignore(top),
+        'tablesizes': dedup_ignore(top, N),
     }

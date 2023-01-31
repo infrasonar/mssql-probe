@@ -5,12 +5,13 @@ def dedup(items: list) -> list:
     counts = Counter()
     for item in items:
         name = item['name']
-        item['name'] = f'{name}_{counts[name]}'
+        if counts[name]:
+            item['name'] = f'{name}_{counts[name]}'
         counts[name] += 1
     return items
 
 
-def dedup_ignore(items: list) -> list:
+def dedup_ignore(items: list, max_items=None) -> list:
     names = set()
     new = []
     for item in items:
@@ -19,4 +20,6 @@ def dedup_ignore(items: list) -> list:
             continue
         names.add(name)
         new.append(item)
+        if max_items is not None and len(new) == max_items:
+            break
     return new

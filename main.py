@@ -2,7 +2,6 @@ from libprobe.probe import Probe
 from lib.check.agentalerts import check_agentalerts
 from lib.check.agentjobs import check_agentjobs
 from lib.check.avgtaskcount import check_avgtaskcount
-from lib.check.bestpractices import check_bestpractices
 from lib.check.bufferpoolusage import check_bufferpoolusage
 from lib.check.cpustats import check_cpustats
 from lib.check.dbinstances import check_dbinstances
@@ -51,7 +50,6 @@ if __name__ == '__main__':
         'agentalerts': check_agentalerts,
         'agentjobs': check_agentjobs,
         'avgtaskcount': check_avgtaskcount,
-        'bestpractices': check_bestpractices,
         'bufferpoolusage': check_bufferpoolusage,
         'cpustats': check_cpustats,
         'dbinstances': check_dbinstances,

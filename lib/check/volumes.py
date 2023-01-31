@@ -11,5 +11,5 @@ async def check_volumes(
 
     res = await get_data(asset, asset_config, config, QUERY)
     return {
-        'volumes': res,  # TODO dedup?
+        'volumes': res  # no dedup as query used DISTICT
     }

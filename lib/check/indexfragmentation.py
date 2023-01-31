@@ -14,7 +14,7 @@ async def check_indexfragmentation(
 
     res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True)
     top = sorted(res, key=lambda a: a.get(
-        'avg_fragmentation_in_percent'), reverse=True)[:N]
+        'avg_fragmentation_in_percent'), reverse=True)
     return {
-        'indexfragmentation': dedup_ignore(top),
+        'indexfragmentation': dedup_ignore(top, N),
     }
