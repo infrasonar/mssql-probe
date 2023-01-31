@@ -32,7 +32,6 @@ from lib.check.pagelifeexpectancy import check_pagelifeexpectancy
 from lib.check.pendingmemorygrants import check_pendingmemorygrants
 from lib.check.plancache import check_plancache
 from lib.check.processaddressspace import check_processaddressspace
-from lib.check.recentbackups import check_recentbackups
 from lib.check.recoverymodel import check_recoverymodel
 from lib.check.sessions import check_sessions
 from lib.check.sqlservices import check_sqlservices
@@ -82,7 +81,6 @@ if __name__ == '__main__':
         'pendingmemorygrants': check_pendingmemorygrants,
         'plancache': check_plancache,
         'processaddressspace': check_processaddressspace,
-        'recentbackups': check_recentbackups,
         'recoverymodel': check_recoverymodel,
         'sessions': check_sessions,
         'sqlservices': check_sqlservices,
