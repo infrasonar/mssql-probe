@@ -22,3 +22,76 @@ Variable            | Default                        | Description
 ```
 docker build -t mssql-probe . --no-cache
 ```
+
+## Config
+
+```yaml
+vcenter:
+  config:
+    username: "my_account@domain"
+    password: "my_password"
+```
+
+## Dry run
+
+Available checks:
+- `agentalerts`
+- `agentjobs`
+- `avgtaskcount`
+- `bufferpoolusage`
+- `cpustats`
+- `dbinstances`
+- `dbperfcounters`
+- `dbtracestatus`
+- `drivelatency`
+- `filelatency`
+- `hardware`
+- `heaptables`
+- `indexchange`
+- `indexfragmentation`
+- `indexusage`
+- `instanceconfig`
+- `instanceperfcounters`
+- `lastbackups`
+- `logicalqueryreads`
+- `logshipping`
+- `logshippinglog`
+- `memoryconsumers`
+- `memorydistribution`
+- `memorydumps`
+- `missingindexes`
+- `numa`
+- `oldstatistics`
+- `osmemory`
+- `pagelifeexpectancy`
+- `pendingmemorygrants`
+- `plancache`
+- `processaddressspace`
+- `recoverymodel`
+- `sessions`
+- `sqlservices`
+- `system`
+- `tablesizes`
+- `topexecutedqueries`
+- `topqueryio`
+- `topworkertimequeries`
+- `unusedindexes`
+- `volumes`
+- `waitstats`
+
+Create a yaml file, for example _(test.yaml)_:
+
+```yaml
+asset:
+  name: "foo.local"
+  check: "system"
+  config:
+    address: "192.168.1.2"
+    port: 1433  # not required, default MSSQL port is 1433
+```
+
+Run the probe with the `DRY_RUN` environment variable set the the yaml file above.
+
+```
+DRY_RUN=test.yaml python main.py
+```
