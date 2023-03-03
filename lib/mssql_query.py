@@ -90,7 +90,12 @@ async def get_data(
     if not address:
         address = asset.name
     assert asset_config, 'missing credentials'
-    port = config.get('port', DEFAULT_MSSQL_PORT)
+    instance = config.get('instance', '')
+    if instance:
+        address = f'{address}\\{instance}'
+        port = None
+    else:
+        port = config.get('port', DEFAULT_MSSQL_PORT)
 
     try:
         func = _get_data_each_db if each_db \
