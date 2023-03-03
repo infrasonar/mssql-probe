@@ -13,7 +13,7 @@ async def check_heaptables(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True)
-    top = sorted(res, key=lambda a: a.get('advangtage'), reverse=True)
+    top = sorted(res, key=lambda a: a.get('advantage'), reverse=True)
     return {
         'heaptables': dedup_ignore(top, N),
     }
