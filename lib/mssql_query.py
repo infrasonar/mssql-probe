@@ -27,7 +27,7 @@ def _get_conn(host, port, username, password, dbname=None):
     )
 
 
-def _get_data(host, port, username, password, qry, db):
+def _get_data(host, port, username, password, qry, db, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
             cur.execute(qry)
@@ -36,7 +36,7 @@ def _get_data(host, port, username, password, qry, db):
             return collnames, res
 
 
-def _get_data_each_db(host, port, username, password, qry, *_):
+def _get_data_each_db(host, port, username, password, qry, _db, min_level):
     with _get_conn(host, port, username, password) as conn:
         dbs, expired = AssetCache.get_value((host, port, 'dbnames'))
         if dbs is None or expired:
@@ -51,7 +51,9 @@ def _get_data_each_db(host, port, username, password, qry, *_):
 
         res = []
         collnames = []
-        for db in dbs:
+        for db, compatibility_level in dbs:
+            if min_level is not None and compatibility_level < min_level:
+                continue
             try:
                 with conn.cursor() as cur:
                     cur.execute('USE [{}];\r\n{}'.format(db, qry))
@@ -70,12 +72,11 @@ def _get_data_each_db(host, port, username, password, qry, *_):
 def _get_db_names(conn):
     with conn.cursor() as cur:
         cur.execute('''
-            SELECT name FROM sys.databases
+            SELECT name, compatibility_level FROM sys.databases
             WHERE name not in ('master', 'tempdb', 'model', 'msdb')
         ''')
         res = cur.fetchall()
-        dbs = [row[0] for row in res]
-        return dbs
+        return res
 
 
 async def get_data(
@@ -85,7 +86,8 @@ async def get_data(
         query: str,
         idx: Optional[List[str]] = ['name'],
         db: Optional[str] = None,
-        each_db: Optional[bool] = False) -> list:
+        each_db: Optional[bool] = False,
+        min_compatibility_level: Optional[int] = None) -> list:
     address = config.get('address')
     if not address:
         address = asset.name
@@ -109,6 +111,7 @@ async def get_data(
             asset_config['password'],
             query,
             db,
+            min_compatibility_level,
         )
     except Exception as e:
         error_msg = str(e)

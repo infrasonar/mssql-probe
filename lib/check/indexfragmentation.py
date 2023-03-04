@@ -12,7 +12,10 @@ async def check_indexfragmentation(
         asset_config: dict,
         config: dict) -> dict:
 
-    res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True)
+    # compatilibity level 90 is required for the dm_db_index_physical_stats
+    # dynamic view
+    res = await get_data(asset, asset_config, config, QUERY, IDX, each_db=True,
+                         min_compatibility_level=90)
     top = sorted(res, key=lambda a: a.get(
         'avg_fragmentation_in_percent'), reverse=True)
     return {
