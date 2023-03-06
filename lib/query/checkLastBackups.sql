@@ -33,3 +33,6 @@ FROM
 INNER JOIN
 	msdb.dbo.backupset as bs
 ON grouped.finish_date = bs.backup_finish_date
+	AND grouped.machine_name = bs.machine_name
+	AND	grouped.server_name = bs.server_name
+	AND grouped.database_name = bs.database_name
