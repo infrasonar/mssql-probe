@@ -6,7 +6,6 @@ SELECT TOP 25
     [ss].[user_created],
     [ss].[has_filter],
     [ss].[filter_definition],
-    [ss].[is_temporary],
     [sp].[last_updated],
     [sp].[rows] AS [row_cnt],
     [sp].[rows_sampled],
