@@ -5,6 +5,7 @@ WITH CTE_MostRecentJobRun AS
 		job_id,
 		run_status,
 		run_date,
+		run_duration,
 		run_time,
 		RANK() OVER (PARTITION BY job_id ORDER BY run_date DESC,run_time DESC) AS rnk
 	 FROM
@@ -25,6 +26,7 @@ SELECT
 	sc.name AS [category_name],
 	js.next_run_date,
 	js.next_run_time,
+	run_duration,
 	CONVERT(DATETIME, CONVERT(VARCHAR,DATEADD(S,(mrjr.run_time/10000)*60*60 /* hours */
 		+((mrjr.run_time - (mrjr.run_time/10000) * 10000)/100) * 60 /* mins */
 		+ (mrjr.run_time - (mrjr.run_time/100) * 100)  /* secs */,
