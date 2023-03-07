@@ -24,8 +24,6 @@ SELECT
 	sj.notify_email_operator_id,
 	sj.notify_level_email,
 	sc.name AS [category_name],
-	js.next_run_date,
-	js.next_run_time,
 	run_duration,
 	CONVERT(DATETIME, CONVERT(VARCHAR,DATEADD(S,(mrjr.run_time/10000)*60*60 /* hours */
 		+((mrjr.run_time - (mrjr.run_time/10000) * 10000)/100) * 60 /* mins */
