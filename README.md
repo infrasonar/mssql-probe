@@ -26,7 +26,7 @@ docker build -t mssql-probe . --no-cache
 ## Config
 
 ```yaml
-vcenter:
+mssql:
   config:
     username: "my_account@domain"
     password: "my_password"
