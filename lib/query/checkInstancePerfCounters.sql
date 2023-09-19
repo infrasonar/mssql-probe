@@ -46,8 +46,6 @@ WHERE
         AND object_name LIKE '%SQLServer:Locks%') OR
     (counter_name = 'Average Wait Time (ms)' AND instance_name = '_Total'
         AND object_name LIKE '%SQLServer:Locks%') OR
-    (counter_name = 'Average Wait Time Base' AND instance_name = '_Total'
-        AND object_name LIKE '%SQLServer:Locks%') OR
     (counter_name = 'Lock Timeouts (timeout > 0)/sec'
         AND instance_name = '_Total' AND object_name
         LIKE '%SQLServer:Locks%') OR
