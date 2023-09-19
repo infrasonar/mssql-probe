@@ -43,7 +43,7 @@ async def check_instanceperfcounters(
     base = item.pop('update_conflict_ratio_base', None)
     if None not in (n, base):
         try:
-            item['update_conflict'] = n / base
+            item['update_conflict_ratio'] = n / base
         except ZeroDivisionError:
             pass
 
