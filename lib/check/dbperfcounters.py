@@ -24,7 +24,6 @@ async def check_dbperfcounters(
         if metric_name.endswith('_ratio'):
             metric_name = metric_name[:-6]
         out[item_name][metric_name] = value
-
     return {
         'dbperf': tuple(out.values()),
     }
