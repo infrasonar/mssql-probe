@@ -21,16 +21,9 @@ async def check_dbperfcounters(
             .lower() \
             .replace(' ', '_') \
             .replace('/sec', '')
+        if metric_name.endswith('_ratio'):
+            metric_name = metric_name[:-6]
         out[item_name][metric_name] = value
-
-    for item in out.values():
-        n = item.pop('cache_hit_ratio', None)
-        base = item.pop('cache_hit_ratio_base', None)
-        if None not in (n, base):
-            try:
-                item['cache_hit_ratio'] = n / base
-            except ZeroDivisionError:
-                pass
 
     return {
         'dbperf': tuple(out.values()),
