@@ -19,10 +19,15 @@ async def check_instanceperfcounters(
             .replace(' ', '_') \
             .replace('-', '_') \
             .replace('/sec', '')
+        if metric_name.endswith('_ratio'):
+            metric_name = metric_name[:-6]
 
         val = row['cntr_value']
         if metric_name.endswith('_(ms)'):
             metric_name = metric_name[:-5]
+            val = val / 1000
+
+        if metric_name == 'average_wait_time_base':
             val = val / 1000
 
         if metric_name in item:
@@ -30,22 +35,6 @@ async def check_instanceperfcounters(
                 f'Duplicate metric: {metric_name}: '
                 f'{val} vs {item[metric_name]}')
         item[metric_name] = val
-
-    n = item.pop('buffer_cache_hit_ratio', None)
-    base = item.pop('buffer_cache_hit_ratio_base', None)
-    if None not in (n, base):
-        try:
-            item['buffer_cache_hit_ratio'] = n / base
-        except ZeroDivisionError:
-            pass
-
-    n = item.pop('update_conflict_ratio', None)
-    base = item.pop('update_conflict_ratio_base', None)
-    if None not in (n, base):
-        try:
-            item['update_conflict_ratio'] = n / base
-        except ZeroDivisionError:
-            pass
 
     return {
         'instanceperf': [item],
