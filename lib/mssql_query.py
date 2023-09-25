@@ -2,11 +2,11 @@ import asyncio
 import datetime
 import decimal
 import pytds
+import spnego
 import logging
 import uuid
 from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
-from pytds.login import NtlmAuth
 from typing import List, Optional
 from .asset_cache import AssetCache
 
@@ -14,8 +14,28 @@ APPNAME = 'Infrasonar mssql-probe'
 DEFAULT_MSSQL_PORT = 1433
 
 
+# TODO remove this when pytds is updated
+class SpnegoAuth(object):
+    """ Authentication using Negotiate protocol, uses implementation provided pyspnego package
+
+    Takes same parameters as spnego.client function.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self._context = spnego.client(*args, **kwargs)
+
+    def create_packet(self):
+        return self._context.step()
+
+    def handle_next(self, packet):
+        return self._context.step(packet)
+
+    def close(self):
+        pass
+
+
 def _get_conn(host, port, username, password, dbname=None):
-    auth = NtlmAuth(username, password) if '\\' in username else None
+    auth = SpnegoAuth(username, password) if '\\' in username else None
     return pytds.connect(
         host,
         dbname,
