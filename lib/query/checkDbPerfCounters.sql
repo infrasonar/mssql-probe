@@ -6,20 +6,20 @@ FROM
     sys.dm_os_performance_counters
 WHERE
     (counter_name = 'Cache Hit Ratio' AND object_name
-        LIKE '%SQLServer:Catalog Metadata%') OR
+        LIKE '%:Catalog Metadata%' AND instance_name != '_Total') OR
     (counter_name = 'Cache Hit Ratio Base' AND object_name
-        LIKE '%SQLServer:Catalog Metadata%') OR
+        LIKE '%:Catalog Metadata%' AND instance_name != '_Total') OR
     (counter_name = 'Cache Entries Count' AND object_name
-        LIKE '%SQLServer:Catalog Metadata%') OR
+        LIKE '%:Catalog Metadata%' AND instance_name != '_Total') OR
     (counter_name = 'Cache Entries Pinned Count' AND object_name
-        LIKE '%SQLServer:Catalog Metadata%') OR
+        LIKE '%:Catalog Metadata%' AND instance_name != '_Total') OR
     (counter_name = 'Write Transactions/sec' AND object_name
-        LIKE '%SQLServer:Databases%') OR
+        LIKE '%:Databases%' AND instance_name != '_Total') OR
     (counter_name = 'Log Flushes/sec' AND object_name
-        LIKE '%SQLServer:Databases%') OR
+        LIKE '%:Databases%' AND instance_name != '_Total') OR
     (counter_name = 'Log Bytes Flushed/sec' AND object_name
-        LIKE '%SQLServer:Databases%') OR
+        LIKE '%:Databases%' AND instance_name != '_Total') OR
     (counter_name = 'Log Flush Waits/sec' AND object_name
-        LIKE '%SQLServer:Databases%') OR
+        LIKE '%:Databases%' AND instance_name != '_Total') OR
     (counter_name = 'Transactions/sec' AND object_name
-        LIKE '%SQLServer:Databases%')
+        LIKE '%:Databases%' AND instance_name != '_Total')
