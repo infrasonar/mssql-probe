@@ -138,7 +138,8 @@ async def get_data(
                     val = str(val)
                 item[colname] = val
             try:
-                item['name'] = '.'.join(map(str, (item[i] for i in idx)))
+                name = '.'.join(map(str, (item[i] for i in idx)))
+                item['name'] = name.encode('ascii', errors='replace').decode()
             except Exception as e:
                 msg = str(e)
                 raise CheckException(f'item name error: {msg}')

@@ -4,7 +4,7 @@ SELECT
 	[table_name],
 	num_rows,
 	num_reads,
-	LOG10(num_rows * num_reads) AS advantage
+	LOG10(CAST(num_rows AS FLOAT) * CAST(num_reads AS FLOAT)) AS advantage
 FROM (
 	SELECT
 		DB_NAME(database_id) as database_name,
