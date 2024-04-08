@@ -9,7 +9,7 @@ SELECT TOP(25)
     migs.user_seeks,
     migs.avg_total_user_cost,
     migs.avg_user_impact,
-    LOG10(user_seeks * avg_total_user_cost * avg_user_impact) as index_usefulness
+    LOG10(CAST(user_seeks AS FLOAT) * CAST(avg_total_user_cost AS FLOAT) * CAST(avg_user_impact AS FLOAT)) as index_usefulness
 FROM
     sys.dm_db_missing_index_group_stats AS migs WITH (NOLOCK)
     INNER JOIN sys.dm_db_missing_index_groups AS mig WITH (NOLOCK) ON migs.group_handle = mig.index_group_handle
