@@ -97,7 +97,7 @@ async def get_data(
     if username is None or password is None:
         raise CheckException(
             'Missing credentials. Please refer to the following documentation'
-            f' for detailed instructions: {DOCS_URL}'
+            f' for detailed instructions: <{DOCS_URL}>'
         )
     instance = config.get('instance', '')
     if instance:
@@ -114,8 +114,8 @@ async def get_data(
             func,
             address,
             port,
-            asset_config['username'],
-            asset_config['password'],
+            username,
+            password,
             query,
             db,
             min_compatibility_level,
