@@ -109,7 +109,7 @@ async def get_data(
     try:
         func = _get_data_each_db if each_db \
             else _get_data
-        colnames, rows = await asyncio.get_event_loop().run_in_executor(
+        colnames, rows = await asyncio.get_running_loop().run_in_executor(
             None,
             func,
             address,
