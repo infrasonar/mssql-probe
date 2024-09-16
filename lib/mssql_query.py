@@ -99,7 +99,6 @@ async def get_data(
             'Missing credentials. Please refer to the following documentation'
             f' for detailed instructions: {DOCS_URL}'
         )
-    assert asset_config, 'missing credentials'
     instance = config.get('instance', '')
     if instance:
         address = f'{address}\\{instance}'
