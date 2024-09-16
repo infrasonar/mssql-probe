@@ -6,8 +6,9 @@ import logging
 import uuid
 from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
-from pytds.login import NtlmAuth
+from pytds.login import SpnegoAuth
 from typing import List, Optional
+from . import DOCS_URL
 from .asset_cache import AssetCache
 
 APPNAME = 'Infrasonar mssql-probe'
@@ -15,7 +16,7 @@ DEFAULT_MSSQL_PORT = 1433
 
 
 def _get_conn(host, port, username, password, dbname=None):
-    auth = NtlmAuth(username, password) if '\\' in username else None
+    auth = SpnegoAuth(username, password) if '\\' in username else None
     return pytds.connect(
         host,
         dbname,
@@ -84,13 +85,20 @@ async def get_data(
         asset_config: dict,
         config: dict,
         query: str,
-        idx: Optional[List[str]] = ['name'],
+        idx: List[str] = ['name'],
         db: Optional[str] = None,
-        each_db: Optional[bool] = False,
+        each_db: bool = False,
         min_compatibility_level: Optional[int] = None) -> list:
     address = config.get('address')
     if not address:
         address = asset.name
+    username = asset_config.get('username')
+    password = asset_config.get('password')
+    if username is None or password is None:
+        raise CheckException(
+            'Missing credentials. Please refer to the following documentation'
+            f' for detailed instructions: {DOCS_URL}'
+        )
     assert asset_config, 'missing credentials'
     instance = config.get('instance', '')
     if instance:
@@ -124,7 +132,7 @@ async def get_data(
         if 'Previous statement didn\'t produce any results' in error_msg:
             return []
         else:
-            raise CheckException(f'query error: {error_msg}')
+            raise CheckException(f'Query error: {error_msg}')
     else:
         items = []
         for row in rows:
@@ -142,6 +150,6 @@ async def get_data(
                 item['name'] = name.encode('ascii', errors='replace').decode()
             except Exception as e:
                 msg = str(e)
-                raise CheckException(f'item name error: {msg}')
+                raise CheckException(f'Item name error: {msg}')
             items.append(item)
         return items
