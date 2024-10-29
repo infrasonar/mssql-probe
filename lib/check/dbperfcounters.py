@@ -27,7 +27,7 @@ async def check_dbperfcounters(
         val = item.pop('cache_hit_ratio', None)
         base = item.pop('cache_hit_ratio_base', None)
         if val is not None and base:
-            item['cache_hit'] = val / base * 100
+            item['cache_hit_ratio'] = val / base * 100
 
     return {
         'dbperf': tuple(out.values()),
