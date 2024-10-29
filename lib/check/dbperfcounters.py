@@ -21,9 +21,14 @@ async def check_dbperfcounters(
             .lower() \
             .replace(' ', '_') \
             .replace('/sec', '')
-        if metric_name.endswith('_ratio'):
-            metric_name = metric_name[:-6]
         out[item_name][metric_name] = value
+
+    for item in out.values():
+        val = item.pop('cache_hit_ratio', None)
+        base = item.pop('cache_hit_ratio_base', None)
+        if val is not None and base:
+            item['cache_hit'] = val / base * 100
+
     return {
         'dbperf': tuple(out.values()),
     }
