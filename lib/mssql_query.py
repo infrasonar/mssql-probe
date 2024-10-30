@@ -173,5 +173,5 @@ def check_noaccess(asset: Asset, state: dict):
     noaccess, _ = AssetCache.get_value((asset.id, 'noaccess'))
     if noaccess:
         noaccess = '\n- ' + '\n- '.join(f'`{db}`' for db in noaccess)
-        msg = f'Not a able to access database(s):{noaccess}'
+        msg = f'Not able to access database(s):{noaccess}'
         raise IncompleteResultException(msg, state)
