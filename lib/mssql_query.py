@@ -6,6 +6,7 @@ import logging
 import uuid
 from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
+from libprobe.exceptions import IncompleteResultException
 from pytds.login import SpnegoAuth
 from typing import List, Optional
 from . import DOCS_URL
@@ -28,7 +29,7 @@ def _get_conn(host, port, username, password, dbname=None):
     )
 
 
-def _get_data(host, port, username, password, qry, db, *_):
+def _get_data(asset, host, port, username, password, qry, db, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
             cur.execute(qry)
@@ -37,12 +38,19 @@ def _get_data(host, port, username, password, qry, db, *_):
             return collnames, res
 
 
-def _get_data_each_db(host, port, username, password, qry, _db, min_level):
+def _get_data_each_db(asset, host, port, username, password, qry, _db,
+                      min_level):
     with _get_conn(host, port, username, password) as conn:
-        dbs, expired = AssetCache.get_value((host, port, 'dbnames'))
+        dbs, expired = AssetCache.get_value((asset.id, 'dbnames'))
         if dbs is None or expired:
             dbs = _get_db_names(conn)
-            AssetCache.set_value((host, port, 'dbnames'), dbs, 900)
+            AssetCache.set_value((asset.id, 'dbnames'), dbs, 900)
+        noaccess, expired = AssetCache.get_value((asset.id, 'noaccess'))
+        if expired:
+            noaccess = []
+            AssetCache.drop((asset.id, 'noaccess'))
+        elif noaccess is None:
+            noaccess = []
 
         # blame [msdb] for our CPU usage. Since we otherwise are blaming
         # the measured instances
@@ -55,6 +63,8 @@ def _get_data_each_db(host, port, username, password, qry, _db, min_level):
         for db, compatibility_level in dbs:
             if min_level is not None and compatibility_level < min_level:
                 continue
+            elif db in noaccess:
+                continue
             try:
                 with conn.cursor() as cur:
                     cur.execute('USE [{}];\r\n{}'.format(db, qry))
@@ -64,7 +74,11 @@ def _get_data_each_db(host, port, username, password, qry, _db, min_level):
             except Exception as ex:
                 msg = str(ex)
                 if 'cannot be opened. It is in the middle of a restore' in msg:
-                    continue
+                    pass
+                elif 'is not able to access the database' in msg:
+                    noaccess.append(db)
+                    AssetCache.set_value((asset.id, 'noaccess'), noaccess,
+                                         7200)
                 else:
                     raise
         return collnames, res
@@ -112,6 +126,7 @@ async def get_data(
         colnames, rows = await asyncio.get_running_loop().run_in_executor(
             None,
             func,
+            asset,
             address,
             port,
             username,
@@ -152,3 +167,11 @@ async def get_data(
                 raise CheckException(f'Item name error: {msg}')
             items.append(item)
         return items
+
+
+def check_noaccess(asset: Asset, state: dict):
+    noaccess, _ = AssetCache.get_value((asset.id, 'noaccess'))
+    if noaccess:
+        noaccess = '\n- ' + '\n- '.join(f'`{db}`' for db in noaccess)
+        msg = f'Not a able to access database(s): {noaccess}'
+        raise IncompleteResultException(msg, state)
