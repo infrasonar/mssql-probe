@@ -1,5 +1,6 @@
 from libprobe.asset import Asset
 from ..mssql_query import get_data
+from ..utils import perf_large_raw_fraction
 
 QUERY = open('lib/query/checkDbPerfCounters.sql').read()
 
@@ -21,9 +22,11 @@ async def check_dbperfcounters(
             .lower() \
             .replace(' ', '_') \
             .replace('/sec', '')
-        if metric_name.endswith('_ratio'):
-            metric_name = metric_name[:-6]
         out[item_name][metric_name] = value
+
+    for item in out.values():
+        perf_large_raw_fraction('cache_hit_ratio', item)
+
     return {
         'dbperf': tuple(out.values()),
     }
