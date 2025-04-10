@@ -34,7 +34,7 @@ def _get_data(asset, host, port, username, password, qry, db, *_):
         with conn.cursor() as cur:
             cur.execute(qry)
             res = cur.fetchall()
-            collnames = [tup[0] for tup in cur.description]
+            collnames = [tup[0] for tup in cur.description]  # type: ignore
             return collnames, res
 
 
@@ -69,7 +69,8 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
                 with conn.cursor() as cur:
                     cur.execute('USE [{}];\r\n{}'.format(db, qry))
                     if not collnames:
-                        collnames = [tup[0] for tup in cur.description]
+                        collnames = \
+                            [tup[0] for tup in cur.description]  # type: ignore
                     res.extend(cur.fetchall())
             except Exception as ex:
                 msg = str(ex)
