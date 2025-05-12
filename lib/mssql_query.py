@@ -29,7 +29,7 @@ def _get_conn(host, port, username, password, dbname=None):
     )
 
 
-def _get_data(asset, host, port, username, password, qry, db, *_):
+def _get_data(_asset, host, port, username, password, qry, db, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
             cur.execute(qry)
@@ -39,7 +39,7 @@ def _get_data(asset, host, port, username, password, qry, db, *_):
 
 
 def _get_data_each_db(asset, host, port, username, password, qry, _db,
-                      min_level):
+                      exclude_databases, min_level):
     with _get_conn(host, port, username, password) as conn:
         dbs, expired = AssetCache.get_value((asset.id, 'dbnames'))
         if dbs is None or expired:
@@ -64,6 +64,8 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
             if min_level is not None and compatibility_level < min_level:
                 continue
             elif db in noaccess:
+                continue
+            elif db.lower() in exclude_databases:
                 continue
             try:
                 with conn.cursor() as cur:
@@ -120,6 +122,8 @@ async def get_data(
         port = None
     else:
         port = config.get('port', DEFAULT_MSSQL_PORT)
+    exclude_databases = set(
+        d.lower() for d in config.get('exclude_databases', []))
 
     try:
         func = _get_data_each_db if each_db \
@@ -134,6 +138,7 @@ async def get_data(
             password,
             query,
             db,
+            exclude_databases,
             min_compatibility_level,
         )
     except Exception as e:
