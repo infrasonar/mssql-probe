@@ -1,5 +1,6 @@
 from libprobe.asset import Asset
 from ..mssql_query import get_data
+from ..utils import do_exclude_databases
 
 QUERY = open('lib/query/checkDbInstances.sql').read()
 
@@ -10,12 +11,7 @@ async def check_dbinstances(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY)
-
-    exclude_databases = set(
-        d.lower() for d in config.get('exclude_databases', []))
-    if exclude_databases:
-        res = [item for item in res
-               if item['database_name'].lower() not in exclude_databases]
+    res = do_exclude_databases(res, config, 'db_name')
 
     return {
         'dbinstances': res,
