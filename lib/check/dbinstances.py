@@ -11,7 +11,7 @@ async def check_dbinstances(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY)
-    res = do_exclude_databases(res, config, 'db_name')
+    res = do_exclude_databases(res, config)
 
     return {
         'dbinstances': res,
