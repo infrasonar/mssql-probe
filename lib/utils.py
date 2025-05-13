@@ -25,6 +25,16 @@ def dedup_ignore(items: list, max_items=None) -> list:
     return new
 
 
+def do_exclude_databases(items: list, config: dict,
+                         metric_name: str = 'database_name'):
+    exclude_databases = set(
+        d.lower() for d in config.get('exclude_databases', []))
+    if exclude_databases:
+        items = [item for item in items
+                 if item.get(metric_name, '').lower() not in exclude_databases]
+    return items
+
+
 def perf_average_bulk(metric_name: str, item: dict, prev: dict):
     # cntr_type 1073874176
     n0 = prev.get(metric_name)
