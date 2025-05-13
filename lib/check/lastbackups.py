@@ -11,6 +11,13 @@ async def check_lastbackups(
         config: dict) -> dict:
 
     res = await get_data(asset, asset_config, config, QUERY, IDX)
+
+    exclude_databases = set(
+        d.lower() for d in config.get('exclude_databases', []))
+    if exclude_databases:
+        res = [item for item in res
+               if item['database_name'].lower() not in exclude_databases]
+
     return {
         'backups': res,
     }
