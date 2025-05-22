@@ -54,6 +54,7 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
 
         # blame [msdb] for our CPU usage. Since we otherwise are blaming
         # the measured instances
+        logging.debug(f'Processing DB: msdb (asset ID {asset.id})...')
         with conn.cursor() as cur:
             cur.execute('USE [msdb];\r\n{}'.format(qry))
             cur.fetchall()
@@ -68,6 +69,7 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
             elif db.lower() in exclude_databases:
                 continue
             try:
+                logging.debug(f'Processing DB: {db} (asset ID {asset.id})...')
                 with conn.cursor() as cur:
                     cur.execute('USE [{}];\r\n{}'.format(db, qry))
                     if not collnames:
