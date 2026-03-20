@@ -17,7 +17,9 @@ DEFAULT_MSSQL_PORT = 1433
 
 
 def _get_conn(host, port, username, password, dbname=None):
-    auth = SpnegoAuth(username, password) if '\\' in username else None
+    auth = SpnegoAuth(username, password) \
+        if '\\' in username or '@' in username \
+        else None
     return pytds.connect(
         host,
         dbname,
