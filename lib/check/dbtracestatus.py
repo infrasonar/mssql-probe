@@ -1,4 +1,5 @@
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 
 QUERY = open('lib/query/checkDbTraceStatus.sql').read()
@@ -12,18 +13,20 @@ STATUS_LK = {
 }
 
 
-async def check_dbtracestatus(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckDbTraceStatus(Check):
+    key = 'dbtracestatus'
+    unchanged_eol = 14400
 
-    res = await get_data(asset, asset_config, config, QUERY, [])
-    for item in res:
-        item['name'] = str(item.pop('TraceFlag'))
-        item['global'] = BOOL_LK.get(item.pop('Global', None))
-        item['session'] = BOOL_LK.get(item.pop('Session', None))
-        item['status'] = STATUS_LK.get(item.pop('Status', None))
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
 
-    return {
-        'dbtracestatus': res,
-    }
+        res = await get_data(asset, local_config, config, QUERY, [])
+        for item in res:
+            item['name'] = str(item.pop('TraceFlag'))
+            item['global'] = BOOL_LK.get(item.pop('Global', None))
+            item['session'] = BOOL_LK.get(item.pop('Session', None))
+            item['status'] = STATUS_LK.get(item.pop('Status', None))
+
+        return {
+            'dbtracestatus': res,
+        }

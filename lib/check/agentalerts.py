@@ -1,4 +1,5 @@
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 
 QUERY = open('lib/query/checkAgentAlerts.sql').read()
@@ -102,17 +103,19 @@ SEVERITY_LK = {
 }
 
 
-async def check_agentalerts(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckAgentAlerts(Check):
+    key = 'agentalerts'
+    unchanged_eol = 14400
 
-    res = await get_data(asset, asset_config, config, QUERY)
-    for item in res:
-        severity = item.get('severity')
-        if severity is not None:
-            item['alert_info'] = INFO_LK.get(severity)
-            item['syslog_severity'] = SEVERITY_LK.get(severity)
-    return {
-        'agentalerts': res,
-    }
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
+
+        res = await get_data(asset, local_config, config, QUERY)
+        for item in res:
+            severity = item.get('severity')
+            if severity is not None:
+                item['alert_info'] = INFO_LK.get(severity)
+                item['syslog_severity'] = SEVERITY_LK.get(severity)
+        return {
+            'agentalerts': res,
+        }

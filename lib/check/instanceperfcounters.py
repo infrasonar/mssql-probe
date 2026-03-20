@@ -1,5 +1,6 @@
 import asyncio
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 from ..utils import perf_average_bulk, perf_large_raw_fraction
 
@@ -34,28 +35,30 @@ def on_data(res):
     return item
 
 
-async def check_instanceperfcounters(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckInstancePerfCounters(Check):
+    key = 'instanceperfcounters'
+    unchanged_eol = 0
 
-    res = await get_data(asset, asset_config, config, QUERY, [])
-    item = on_data(res)
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
 
-    prev = _CACHE.get(asset.id)
-    if prev is None:
-        prev = item
-        await asyncio.sleep(3)
-        res = await get_data(asset, asset_config, config, QUERY, [])
+        res = await get_data(asset, local_config, config, QUERY, [])
         item = on_data(res)
 
-    # store a copy as we will alter the item for a compact result
-    _CACHE[asset.id] = item.copy()
+        prev = _CACHE.get(asset.id)
+        if prev is None:
+            prev = item
+            await asyncio.sleep(3)
+            res = await get_data(asset, local_config, config, QUERY, [])
+            item = on_data(res)
 
-    perf_average_bulk('average_wait_time', item, prev)
-    perf_average_bulk('update_conflict_ratio', item, prev)
-    perf_large_raw_fraction('buffer_cache_hit_ratio', item)
+        # store a copy as we will alter the item for a compact result
+        _CACHE[asset.id] = item.copy()
 
-    return {
-        'instanceperf': [item],
-    }
+        perf_average_bulk('average_wait_time', item, prev)
+        perf_average_bulk('update_conflict_ratio', item, prev)
+        perf_large_raw_fraction('buffer_cache_hit_ratio', item)
+
+        return {
+            'instanceperf': [item],
+        }

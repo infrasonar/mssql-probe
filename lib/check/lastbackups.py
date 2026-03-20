@@ -1,4 +1,5 @@
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 from ..utils import do_exclude_databases
 
@@ -6,14 +7,16 @@ QUERY = open('lib/query/checkLastBackups.sql').read()
 IDX = ['machine_name', 'server_name', 'database_name']
 
 
-async def check_lastbackups(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckLastBackups(Check):
+    key = 'lastbackups'
+    unchanged_eol = 14400
 
-    res = await get_data(asset, asset_config, config, QUERY, IDX)
-    res = do_exclude_databases(res, config)
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
 
-    return {
-        'backups': res,
-    }
+        res = await get_data(asset, local_config, config, QUERY, IDX)
+        res = do_exclude_databases(res, config)
+
+        return {
+            'backups': res,
+        }

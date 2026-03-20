@@ -1,18 +1,21 @@
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 from ..utils import do_exclude_databases
 
 QUERY = open('lib/query/checkFileLatency.sql').read()
 
 
-async def check_filelatency(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckFileLatency(Check):
+    key = 'filelatency'
+    unchanged_eol = 14400
 
-    res = await get_data(asset, asset_config, config, QUERY, db='master')
-    res = do_exclude_databases(res, config)
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
 
-    return {
-        'filelatency': res,
-    }
+        res = await get_data(asset, local_config, config, QUERY, db='master')
+        res = do_exclude_databases(res, config)
+
+        return {
+            'filelatency': res,
+        }

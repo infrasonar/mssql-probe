@@ -1,18 +1,21 @@
 from libprobe.asset import Asset
+from libprobe.check import Check
 from ..mssql_query import get_data
 from ..utils import do_exclude_databases
 
 QUERY = open('lib/query/checkDbInstances.sql').read()
 
 
-async def check_dbinstances(
-        asset: Asset,
-        asset_config: dict,
-        config: dict) -> dict:
+class CheckDbInstances(Check):
+    key = 'dbinstances'
+    unchanged_eol = 14400
 
-    res = await get_data(asset, asset_config, config, QUERY)
-    res = do_exclude_databases(res, config)
+    @staticmethod
+    async def run(asset: Asset, local_config: dict, config: dict) -> dict:
 
-    return {
-        'dbinstances': res,
-    }
+        res = await get_data(asset, local_config, config, QUERY)
+        res = do_exclude_databases(res, config)
+
+        return {
+            'dbinstances': res,
+        }
