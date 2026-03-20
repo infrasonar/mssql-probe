@@ -7,7 +7,7 @@ QUERY = open('lib/query/checkMemoryDumps.sql').read()
 
 class CheckMemoryDumps(Check):
     key = 'memorydumps'
-    unchanged_eol = 0
+    unchanged_eol = 14400
 
     @staticmethod
     async def run(asset: Asset, local_config: dict, config: dict) -> dict:

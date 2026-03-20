@@ -8,7 +8,7 @@ QUERY = open('lib/query/checkFileLatency.sql').read()
 
 class CheckFileLatency(Check):
     key = 'filelatency'
-    unchanged_eol = 0
+    unchanged_eol = 14400
 
     @staticmethod
     async def run(asset: Asset, local_config: dict, config: dict) -> dict:

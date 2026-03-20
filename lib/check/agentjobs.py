@@ -8,7 +8,7 @@ QUERY = open('lib/query/checkAgentJobs.sql').read()
 
 class CheckAgentJobs(Check):
     key = 'agentjobs'
-    unchanged_eol = 0
+    unchanged_eol = 14400
 
     @staticmethod
     async def run(asset: Asset, local_config: dict, config: dict) -> dict:

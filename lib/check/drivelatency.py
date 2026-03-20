@@ -7,7 +7,7 @@ QUERY = open('lib/query/checkDriveLatency.sql').read()
 
 class CheckDriveLatency(Check):
     key = 'drivelatency'
-    unchanged_eol = 0
+    unchanged_eol = 14400
 
     @staticmethod
     async def run(asset: Asset, local_config: dict, config: dict) -> dict:
