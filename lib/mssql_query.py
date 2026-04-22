@@ -8,7 +8,6 @@ from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
 from libprobe.exceptions import IncompleteResultException
 from pytds.login import SpnegoAuth
-from typing import List, Optional
 from . import DOCS_URL
 from .asset_cache import AssetCache
 
@@ -106,10 +105,10 @@ async def get_data(
         asset_config: dict,
         config: dict,
         query: str,
-        idx: List[str] = ['name'],
-        db: Optional[str] = None,
+        idx: list[str] = ['name'],
+        db: str | None = None,
         each_db: bool = False,
-        min_compatibility_level: Optional[int] = None) -> list:
+        min_compatibility_level: int | None = None) -> list:
     address = config.get('address')
     if not address:
         address = asset.name
