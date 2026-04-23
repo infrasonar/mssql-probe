@@ -92,6 +92,6 @@ if __name__ == '__main__':
         CheckWaitStats,
     )
 
-    probe = Probe("mssql", version, checks)
+    probe = Probe("mssql", version, checks, loggers=('pytds',))
 
     probe.start()
