@@ -102,7 +102,7 @@ def _get_db_names(conn):
 
 async def get_data(
         asset: Asset,
-        asset_config: dict,
+        local_config: dict,
         config: dict,
         query: str,
         idx: list[str] = ['name'],
@@ -112,8 +112,8 @@ async def get_data(
     address = config.get('address')
     if not address:
         address = asset.name
-    username = asset_config.get('username')
-    password = asset_config.get('password')
+    username = local_config.get('username')
+    password = local_config.get('password')
     if username is None or password is None:
         raise CheckException(
             'Missing credentials. Please refer to the following documentation'
