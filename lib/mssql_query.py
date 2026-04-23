@@ -8,7 +8,6 @@ from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
 from libprobe.exceptions import IncompleteResultException
 from pytds.login import SpnegoAuth
-from typing import List, Optional
 from . import DOCS_URL
 from .asset_cache import AssetCache
 
@@ -103,18 +102,18 @@ def _get_db_names(conn):
 
 async def get_data(
         asset: Asset,
-        asset_config: dict,
+        local_config: dict,
         config: dict,
         query: str,
-        idx: List[str] = ['name'],
-        db: Optional[str] = None,
+        idx: list[str] = ['name'],
+        db: str | None = None,
         each_db: bool = False,
-        min_compatibility_level: Optional[int] = None) -> list:
+        min_compatibility_level: int | None = None) -> list:
     address = config.get('address')
     if not address:
         address = asset.name
-    username = asset_config.get('username')
-    password = asset_config.get('password')
+    username = local_config.get('username')
+    password = local_config.get('password')
     if username is None or password is None:
         raise CheckException(
             'Missing credentials. Please refer to the following documentation'
