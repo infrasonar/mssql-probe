@@ -16,7 +16,7 @@ APPNAME = 'Infrasonar mssql-probe'
 DEFAULT_MSSQL_PORT = 1433
 
 
-def _get_conn(host: str, port: int, username: str, password: str,
+def _get_conn(host: str, port: int | None, username: str, password: str,
               dbname: str | None = None):
     auth = SpnegoAuth(username, password) \
         if '\\' in username or '@' in username \
@@ -32,7 +32,7 @@ def _get_conn(host: str, port: int, username: str, password: str,
     )
 
 
-def _get_data(_asset: Asset, host: str, port: int, username: str,
+def _get_data(_asset: Asset, host: str, port: int | None, username: str,
               password: str, qry: str, db: str | None, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
@@ -42,7 +42,7 @@ def _get_data(_asset: Asset, host: str, port: int, username: str,
             return collnames, res
 
 
-def _get_data_each_db(asset: Asset, host: str, port: int, username: str,
+def _get_data_each_db(asset: Asset, host: str, port: int | None, username: str,
                       password: str, qry: str, _db: str | None,
                       exclude_databases: list[str], min_level: int | None):
     with _get_conn(host, port, username, password) as conn:
