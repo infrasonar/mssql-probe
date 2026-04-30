@@ -44,7 +44,7 @@ def _get_data(_asset: Asset, host: str, port: int | None, username: str,
 
 def _get_data_each_db(asset: Asset, host: str, port: int | None, username: str,
                       password: str, qry: str, _db: str | None,
-                      exclude_databases: list[str], min_level: int | None):
+                      exclude_databases: set[str], min_level: int | None):
     with _get_conn(host, port, username, password) as conn:
         dbs, expired = AssetCache.get_value((asset.id, 'dbnames'))
         if dbs is None or expired:
