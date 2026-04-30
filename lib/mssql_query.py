@@ -7,6 +7,7 @@ import uuid
 from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
 from libprobe.exceptions import IncompleteResultException
+from pytds import Connection
 from pytds.login import SpnegoAuth
 from . import DOCS_URL
 from .asset_cache import AssetCache
@@ -15,7 +16,8 @@ APPNAME = 'Infrasonar mssql-probe'
 DEFAULT_MSSQL_PORT = 1433
 
 
-def _get_conn(host, port, username, password, dbname=None):
+def _get_conn(host: str, port: int, username: str, password: str,
+              dbname: str | None = None):
     auth = SpnegoAuth(username, password) \
         if '\\' in username or '@' in username \
         else None
@@ -30,7 +32,8 @@ def _get_conn(host, port, username, password, dbname=None):
     )
 
 
-def _get_data(_asset, host, port, username, password, qry, db, *_):
+def _get_data(_asset: Asset, host: str, port: int, username: str,
+              password: str, qry: str, db: str | None, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
             cur.execute(qry)
@@ -39,8 +42,9 @@ def _get_data(_asset, host, port, username, password, qry, db, *_):
             return collnames, res
 
 
-def _get_data_each_db(asset, host, port, username, password, qry, _db,
-                      exclude_databases, min_level):
+def _get_data_each_db(asset: Asset, host: str, port: int, username: str,
+                      password: str, qry: str, _db: str | None,
+                      exclude_databases: list[str], min_level: int | None):
     with _get_conn(host, port, username, password) as conn:
         dbs, expired = AssetCache.get_value((asset.id, 'dbnames'))
         if dbs is None or expired:
@@ -90,7 +94,7 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
         return collnames, res
 
 
-def _get_db_names(conn):
+def _get_db_names(conn: Connection):
     with conn.cursor() as cur:
         cur.execute('''
             SELECT name, compatibility_level FROM sys.databases

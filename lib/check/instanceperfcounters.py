@@ -8,7 +8,7 @@ _CACHE = {}
 QUERY = open('lib/query/checkInstancePerfCounters.sql').read()
 
 
-def on_data(res):
+def on_data(res: list[dict]) -> dict:
     item = {'name': 'system'}
     for row in res:
         metric_name = row['counter_name'] \
