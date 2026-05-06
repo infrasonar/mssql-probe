@@ -7,8 +7,8 @@ import uuid
 from libprobe.asset import Asset
 from libprobe.exceptions import CheckException
 from libprobe.exceptions import IncompleteResultException
+from pytds import Connection
 from pytds.login import SpnegoAuth
-from typing import List, Optional
 from . import DOCS_URL
 from .asset_cache import AssetCache
 
@@ -16,7 +16,8 @@ APPNAME = 'Infrasonar mssql-probe'
 DEFAULT_MSSQL_PORT = 1433
 
 
-def _get_conn(host, port, username, password, dbname=None):
+def _get_conn(host: str, port: int | None, username: str, password: str,
+              dbname: str | None = None):
     auth = SpnegoAuth(username, password) \
         if '\\' in username or '@' in username \
         else None
@@ -31,7 +32,8 @@ def _get_conn(host, port, username, password, dbname=None):
     )
 
 
-def _get_data(_asset, host, port, username, password, qry, db, *_):
+def _get_data(_asset: Asset, host: str, port: int | None, username: str,
+              password: str, qry: str, db: str | None, *_):
     with _get_conn(host, port, username, password, db) as conn:
         with conn.cursor() as cur:
             cur.execute(qry)
@@ -40,8 +42,9 @@ def _get_data(_asset, host, port, username, password, qry, db, *_):
             return collnames, res
 
 
-def _get_data_each_db(asset, host, port, username, password, qry, _db,
-                      exclude_databases, min_level):
+def _get_data_each_db(asset: Asset, host: str, port: int | None, username: str,
+                      password: str, qry: str, _db: str | None,
+                      exclude_databases: set[str], min_level: int | None):
     with _get_conn(host, port, username, password) as conn:
         dbs, expired = AssetCache.get_value((asset.id, 'dbnames'))
         if dbs is None or expired:
@@ -91,7 +94,7 @@ def _get_data_each_db(asset, host, port, username, password, qry, _db,
         return collnames, res
 
 
-def _get_db_names(conn):
+def _get_db_names(conn: Connection):
     with conn.cursor() as cur:
         cur.execute('''
             SELECT name, compatibility_level FROM sys.databases
@@ -103,18 +106,18 @@ def _get_db_names(conn):
 
 async def get_data(
         asset: Asset,
-        asset_config: dict,
+        local_config: dict,
         config: dict,
         query: str,
-        idx: List[str] = ['name'],
-        db: Optional[str] = None,
+        idx: list[str] = ['name'],
+        db: str | None = None,
         each_db: bool = False,
-        min_compatibility_level: Optional[int] = None) -> list:
+        min_compatibility_level: int | None = None) -> list:
     address = config.get('address')
     if not address:
         address = asset.name
-    username = asset_config.get('username')
-    password = asset_config.get('password')
+    username = local_config.get('username')
+    password = local_config.get('password')
     if username is None or password is None:
         raise CheckException(
             'Missing credentials. Please refer to the following documentation'

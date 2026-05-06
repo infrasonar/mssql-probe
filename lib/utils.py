@@ -11,7 +11,7 @@ def dedup(items: list) -> list:
     return items
 
 
-def dedup_ignore(items: list, max_items=None) -> list:
+def dedup_ignore(items: list, max_items: int | None = None) -> list:
     names = set()
     new = []
     for item in items:
